@@ -1,0 +1,15 @@
+[
+  {
+    "id": "c4ae13545b06e15c",
+    "symbol": "BTC",
+    "condition": "above",
+    "value": 75000,
+    "threshold": 0,
+    "enabled": true,
+    "triggered": false,
+    "triggerCount": 0,
+    "createdAt": "2026-03-26T05:02:48.246Z",
+    "lastTriggeredAt": null,
+    "notes": "Test alert"
+  }
+]

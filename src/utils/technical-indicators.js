@@ -1,0 +1,304 @@
+/**
+ * Technical Analysis (TA) Indicators
+ * Calculate common technical analysis indicators
+ */
+
+class TechnicalIndicators {
+  /**
+   * Simple Moving Average (SMA)
+   */
+  static sma(data, period) {
+    if (data.length < period) {
+      throw new Error(`Not enough data for SMA period ${period}`);
+    }
+
+    const result = [];
+    for (let i = period - 1; i < data.length; i++) {
+      const slice = data.slice(i - period + 1, i + 1);
+      const sum = slice.reduce((a, b) => a + b, 0);
+      result.push(sum / period);
+    }
+    return result;
+  }
+
+  /**
+   * Exponential Moving Average (EMA)
+   */
+  static ema(data, period) {
+    if (data.length < period) {
+      throw new Error(`Not enough data for EMA period ${period}`);
+    }
+
+    const multiplier = 2 / (period + 1);
+    const result = [];
+    
+    // Start with SMA for first value
+    const firstSMA = data.slice(0, period).reduce((a, b) => a + b, 0) / period;
+    result.push(firstSMA);
+
+    // Calculate EMA
+    for (let i = period; i < data.length; i++) {
+      const ema = (data[i] - result[result.length - 1]) * multiplier + result[result.length - 1];
+      result.push(ema);
+    }
+
+    return result;
+  }
+
+  /**
+   * Relative Strength Index (RSI)
+   */
+  static rsi(data, period = 14) {
+    if (data.length < period + 1) {
+      throw new Error(`Not enough data for RSI period ${period}`);
+    }
+
+    const result = [];
+    const changes = [];
+
+    // Calculate price changes
+    for (let i = 1; i < data.length; i++) {
+      changes.push(data[i] - data[i - 1]);
+    }
+
+    // Calculate average gains and losses
+    let avgGain = 0;
+    let avgLoss = 0;
+
+    // First period
+    for (let i = 0; i < period; i++) {
+      if (changes[i] > 0) {
+        avgGain += changes[i];
+      } else {
+        avgLoss -= changes[i];
+      }
+    }
+
+    avgGain /= period;
+    avgLoss /= period;
+
+    result.push(100);
+
+    // Calculate RSI for remaining periods
+    for (let i = period; i < changes.length; i++) {
+      avgGain = ((avgGain * (period - 1)) + (changes[i] > 0 ? changes[i] : 0)) / period;
+      avgLoss = ((avgLoss * (period - 1)) + (changes[i] < 0 ? -changes[i] : 0)) / period;
+
+      let rs = 0;
+      if (avgLoss !== 0) {
+        rs = avgGain / avgLoss;
+      }
+
+      const rsi = 100 - (100 / (1 + rs));
+      result.push(rsi);
+    }
+
+    return result;
+  }
+
+  /**
+   * Moving Average Convergence Divergence (MACD)
+   */
+  static macd(data, fastPeriod = 12, slowPeriod = 26, signalPeriod = 9) {
+    if (data.length < slowPeriod) {
+      throw new Error(`Not enough data for MACD`);
+    }
+
+    const fastEMA = this.ema(data, fastPeriod);
+    const slowEMA = this.ema(data, slowPeriod);
+
+    // Calculate MACD line
+    const macdLine = [];
+    for (let i = 0; i < fastEMA.length; i++) {
+      macdLine.push(fastEMA[i] - slowEMA[i]);
+    }
+
+    // Calculate signal line
+    const signalLine = this.ema(macdLine, signalPeriod);
+
+    // Calculate histogram
+    const histogram = [];
+    for (let i = 0; i < macdLine.length; i++) {
+      if (i < macdLine.length - signalLine.length) {
+        histogram.push(0);
+      } else {
+        histogram.push(macdLine[i] - signalLine[i - (macdLine.length - signalLine.length)]);
+      }
+    }
+
+    return {
+      macdLine,
+      signalLine,
+      histogram
+    };
+  }
+
+  /**
+   * Bollinger Bands
+   */
+  static bollingerBands(data, period = 20, stdDev = 2) {
+    if (data.length < period) {
+      throw new Error(`Not enough data for Bollinger Bands period ${period}`);
+    }
+
+    const middle = this.sma(data, period);
+    const upper = [];
+    const lower = [];
+
+    for (let i = 0; i < middle.length; i++) {
+      const startIndex = i;
+      const endIndex = i + period;
+      const slice = data.slice(startIndex, endIndex);
+
+      // Calculate standard deviation
+      const mean = middle[i];
+      const variance = slice.reduce((sum, val) => sum + Math.pow(val - mean, 2), 0) / period;
+      const std = Math.sqrt(variance);
+
+      upper.push(mean + stdDev * std);
+      lower.push(mean - stdDev * std);
+    }
+
+    return {
+      upper,
+      middle,
+      lower
+    };
+  }
+
+  /**
+   * Support and Resistance Levels
+   */
+  static supportResistance(data, period = 20, tolerance = 0.02) {
+    if (data.length < period) {
+      throw new Error(`Not enough data for support/resistance`);
+    }
+
+    const lows = [];
+    const highs = [];
+
+    for (let i = 1; i < data.length - 1; i++) {
+      // Local low
+      if (data[i] < data[i - 1] && data[i] < data[i + 1]) {
+        lows.push(data[i]);
+      }
+      // Local high
+      if (data[i] > data[i - 1] && data[i] > data[i + 1]) {
+        highs.push(data[i]);
+      }
+    }
+
+    // Cluster levels by tolerance
+    const clusterLevels = (levels) => {
+      if (levels.length === 0) return [];
+
+      levels.sort((a, b) => a - b);
+      const clusters = [];
+
+      for (const level of levels) {
+        const found = clusters.find(c => Math.abs(level - c.level) / c.level < tolerance);
+        if (found) {
+          found.levels.push(level);
+          found.level = found.levels.reduce((a, b) => a + b, 0) / found.levels.length;
+        } else {
+          clusters.push({ level, levels: [level], count: 1 });
+        }
+      }
+
+      // Sort by count and return top levels
+      clusters.sort((a, b) => b.count - a.count);
+      return clusters.slice(0, 3).map(c => c.level);
+    };
+
+    return {
+      support: clusterLevels(lows),
+      resistance: clusterLevels(highs)
+    };
+  }
+
+  /**
+   * Average True Range (ATR)
+   */
+  static atr(high, low, close, period = 14) {
+    if (high.length !== low.length || high.length !== close.length) {
+      throw new Error('High, low, and close arrays must have the same length');
+    }
+
+    if (high.length < period) {
+      throw new Error(`Not enough data for ATR period ${period}`);
+    }
+
+    const trueRanges = [];
+
+    for (let i = 0; i < high.length; i++) {
+      const tr = Math.max(
+        high[i] - low[i],
+        Math.abs(high[i] - (i > 0 ? close[i - 1] : close[i])),
+        Math.abs(low[i] - (i > 0 ? close[i - 1] : close[i]))
+      );
+      trueRanges.push(tr);
+    }
+
+    const atr = this.sma(trueRanges, period);
+    return atr;
+  }
+
+  /**
+   * Volume Moving Average
+   */
+  static vma(volume, period) {
+    if (volume.length < period) {
+      throw new Error(`Not enough volume data for VMA period ${period}`);
+    }
+
+    return this.sma(volume, period);
+  }
+
+  /**
+   * On-Balance Volume (OBV)
+   */
+  static obv(close, volume) {
+    if (close.length !== volume.length) {
+      throw new Error('Close and volume arrays must have the same length');
+    }
+
+    const obv = [0];
+    for (let i = 1; i < close.length; i++) {
+      if (close[i] > close[i - 1]) {
+        obv.push(obv[i - 1] + volume[i]);
+      } else if (close[i] < close[i - 1]) {
+        obv.push(obv[i - 1] - volume[i]);
+      } else {
+        obv.push(obv[i - 1]);
+      }
+    }
+
+    return obv;
+  }
+
+  /**
+   * Calculate multiple indicators at once
+   */
+  static calculateAll(ohlcData, options = {}) {
+    const closes = ohlcData.map(c => c.close);
+    const highs = ohlcData.map(c => c.high);
+    const lows = ohlcData.map(c => c.low);
+    const volumes = ohlcData.map(c => c.volume);
+
+    const result = {
+      sma: options.sma ? this.sma(closes, options.sma) : null,
+      ema: options.ema ? this.ema(closes, options.ema) : null,
+      rsi: options.rsi ? this.rsi(closes, options.rsi) : null,
+      macd: options.macd ? this.macd(closes) : null,
+      bollinger: options.bollinger ? this.bollingerBands(closes, options.bollinger.period || 20) : null,
+      supportResistance: options.sr ? this.supportResistance(closes) : null,
+      atr: options.atr ? this.atr(highs, lows, closes, options.atr) : null,
+      vma: options.vma ? this.vma(volumes, options.vma) : null,
+      obv: options.obv ? this.obv(closes, volumes) : null
+    };
+
+    return result;
+  }
+}
+
+module.exports = TechnicalIndicators;
