@@ -410,43 +410,6 @@ This will test:
 - Sorting functionality
 - Input validation
 
----
-
-## 🔧 Troubleshooting
-
-### Common Issues
-
-#### Invalid Protocol/Chain Name
-
-**Error**: `Invalid protocol name: "...". Only alphanumeric characters and hyphens are allowed.`
-
-**Solution**: Use only alphanumeric characters and hyphens.
-
-#### Network Timeout
-
-**Error**: `⏱️  Request Timeout`
-
-**Solution**: Check your network connection or increase `--timeout`.
-
-#### Resource Not Found (404)
-
-**Error**: `The requested resource was not found`
-
-**Solution**: Verify the protocol or chain name is correct. Use lowercase letters.
-
-#### Rate Limit Exceeded (429)
-
-**Error**: `Rate limit exceeded`
-
-**Solution**: Wait a few seconds before making another request.
-
----
-
-## 📊 Performance
-
-- **Response Time**: < 1.5s for most queries
-- **Caching**: In-memory cache with 5-minute TTL
-- **API Calls**: Efficient caching reduces redundant requests
 
 ---
 
@@ -463,80 +426,27 @@ This will test:
 
 ---
 
-## 🔄 Version History
-
-### v1.0.3 (2026-03-27) - Current Version
-
-**Bug Fixes**:
-- ✅ Fixed protocols sorting functionality (use correct tvl field)
-- ✅ Fixed health command (actual API health check)
-- ✅ Removed unused volume sort option
-- ✅ Enhanced error handling for output formatting
-- ✅ Added empty array validation
-
-**Security Enhancements**:
-- ✅ Comprehensive input validation and sanitization
-- ✅ Enhanced error handling with user-friendly messages
-- ✅ Added security measures to prevent injection attacks
-- ✅ Improved error sanitization to prevent information leakage
-- ✅ Added numeric input range validation
-
-**Documentation**:
-- ✅ Translated all documentation to English
-- ✅ Updated README.md with comprehensive English content
-- ✅ Updated SKILL.md with detailed English content
-
-### v1.0.2 (2026-03-27)
-
-**Bug Fixes**:
-- ✅ Fixed protocols sorting functionality (use correct tvl field)
-- ✅ Fixed health command (actual API health check)
-- ✅ Removed unused volume sort option
-- ✅ Enhanced error handling for output formatting
-- ✅ Added empty array validation
-
-**Security Enhancements**:
-- ✅ Comprehensive input validation and sanitization
-- ✅ Enhanced error handling with user-friendly messages
-- ✅ Added security measures to prevent injection attacks
-- ✅ Improved error sanitization to prevent information leakage
-- ✅ Added numeric input range validation
-
-### v1.0.1 (2026-03-27)
-
-**Security Enhancements**:
-- ✅ Added comprehensive input validation and sanitization
-- ✅ Enhanced error handling with user-friendly messages
-- ✅ Added security measures to prevent injection attacks
-- ✅ Improved error sanitization to prevent information leakage
-- ✅ Added numeric input range validation
-- ✅ Updated documentation to match current implementation
-
-### v1.0.0 (2026-03-25)
-
-**Initial Release**:
-- ✅ DefiLlama TVL, protocols, chains, and yields data
-- ✅ Health check system
-- ✅ Multiple output formats (JSON, table, CSV, pretty)
-- ✅ Basic caching support
-
----
-
 ## 📄 License
 
-MIT License - Feel free to use and modify for your needs.
+MIT License - Copyright (c) 2026 Antalpha
 
----
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-## 🤝 Contributing
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-Contributions are welcome! Please feel free to submit a Pull Request.
-
----
-
-## 📞 Support
-
-For issues, questions, or suggestions, please open an issue on GitHub.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 
 ---
 
@@ -545,7 +455,3 @@ For issues, questions, or suggestions, please open an issue on GitHub.
 For detailed DefiLlama API documentation:
 - https://docs.llama.fi/
 
----
-
-**DefiLlama Data Aggregator v1.0.3**
-**Last Updated**: 2026-03-27 17:45 (GMT+8)
