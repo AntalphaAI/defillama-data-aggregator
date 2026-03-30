@@ -411,16 +411,6 @@ This will test:
 - Sorting functionality
 - Input validation
 
-
----
-
-## 📚 Documentation
-
-| Document | Description |
-|----------|-------------|
-| README.md | User manual (this file) |
-| SKILL.md | Skill technical documentation |
-
 ---
 
 ## 📄 License
@@ -444,11 +434,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
----
-
-## 🌐 API Documentation
-
-For detailed DefiLlama API documentation:
-- https://docs.llama.fi/
-
