@@ -18,11 +18,11 @@ class ApiClient {
     this.debug = config.debug || false;
     this.enableCache = config.enableCache !== false; // Default true
 
-    // IP 直连配置
+    // IP direct connection configuration
     this.useIpDirect = config.useIpDirect || false;
     this.ipBaseUrl = config.ipBaseUrl || null;
     this.hostHeader = config.hostHeader || null;
-    this.rejectUnauthorized = config.rejectUnauthorized !== false; // 默认 true
+    this.rejectUnauthorized = config.rejectUnauthorized !== false; // Default true
   }
 
   /**
@@ -57,7 +57,7 @@ class ApiClient {
    */
   async makeRequest(options, retryCount = 0) {
     try {
-      // 构建请求配置
+      // Build request configuration
       const requestConfig = {
         method: options.method || 'GET',
         headers: options.headers || {},
@@ -66,22 +66,22 @@ class ApiClient {
         timeout: this.timeout
       };
 
-      // IP 直连模式：替换 URL 并设置 Host 头
+      // IP direct mode: replace URL and set Host header
       if (this.useIpDirect && this.ipBaseUrl && options.url) {
-        // 将 baseUrl 替换为 IP 直连地址
+        // Replace baseUrl with IP direct address
         const originalUrl = new URL(options.url);
         const ipUrl = new URL(this.ipBaseUrl);
 
-        // 保留原始路径和查询参数，仅替换协议和主机
+        // Keep original path and query params, only replace protocol and host
         const newUrl = `${this.ipBaseUrl}${originalUrl.pathname}${originalUrl.search}`;
         requestConfig.url = newUrl;
 
-        // 设置 Host 头（SNI）
+        // Set Host header (SNI)
         if (this.hostHeader) {
           requestConfig.headers['Host'] = this.hostHeader;
         }
 
-        // 对于 HTTPS IP 直连，需要禁用证书校验（因为证书是针对域名的）
+        // For HTTPS IP direct, need to disable certificate verification (certificate is for domain)
         if (ipUrl.protocol === 'https:') {
           requestConfig.httpsAgent = new https.Agent({
             rejectUnauthorized: false

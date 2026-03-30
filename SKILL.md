@@ -11,6 +11,9 @@ metadata:
     requires:
       bins: ["node", "npm"]
       env: []
+    install:
+      command: "npm install"
+  repository: https://github.com/AntalphaAI/defillama-data-aggregator
 ---
 
 # DefiLlama Data Aggregator

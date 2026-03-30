@@ -27,50 +27,11 @@ try {
 // Import platform clients
 const DefiLlamaClient = require('./platforms/defillama');
 
-// Import utilities
+// Import utilities (only what's actually used)
 const DataFormatter = require('./utils/formatter');
-const DataAggregator = require('./utils/data-aggregator');
-const TechnicalIndicators = require('./utils/technical-indicators');
-const AlertSystem = require('./utils/alert-system');
-const HistoricalDataStorage = require('./utils/historical-storage');
-const PlatformInfo = require('./utils/platform-info');
 
 // Initialize clients
 const defillama = new DefiLlamaClient(config);
-
-// Initialize data aggregator
-const aggregator = new DataAggregator({
-  defillama
-});
-
-// Enable debug for aggregator (comment out for production)
-// aggregator.debug = true;
-
-// Initialize technical indicators
-const ta = TechnicalIndicators;
-
-// Initialize shared alert system instance
-let sharedAlertSystem = null;
-const getAlertSystem = async () => {
-  if (!sharedAlertSystem) {
-    sharedAlertSystem = new AlertSystem();
-    await sharedAlertSystem.loadAlerts();
-  }
-  return sharedAlertSystem;
-};
-
-// Initialize historical data storage
-let historicalStorage = null;
-const getHistoricalStorage = async () => {
-  if (!historicalStorage) {
-    historicalStorage = new HistoricalDataStorage();
-    await historicalStorage.initialize();
-  }
-  return historicalStorage;
-};
-
-// Initialize platform info
-const platformInfo = new PlatformInfo();
 
 // Create CLI program
 const program = new Command();
@@ -256,16 +217,6 @@ function handleError(error) {
   
   // Exit with error code
   process.exit(1);
-}
-
-/**
- * Warning handler for non-fatal issues
- */
-function handleWarning(message, context = {}) {
-  console.warn(chalk.yellow(`⚠️  Warning: ${message}`));
-  if (Object.keys(context).length > 0) {
-    console.warn(chalk.gray('  Context:', JSON.stringify(context, null, 2)));
-  }
 }
 
 // ============================================================================
@@ -480,19 +431,15 @@ program
 program
   .command('status')
   .description('Show system status and recommendations')
-  .action(async () => {
-    try {
-      console.log(chalk.blue('\n📊 System Status\n'));
+  .action(() => {
+    console.log(chalk.blue('\n📊 System Status\n'));
 
-      console.log(chalk.green('✓ Available Platforms:'));
-      console.log('  - DefiLlama (DeFi data aggregator)');
+    console.log(chalk.green('✓ Available Platforms:'));
+    console.log('  - DefiLlama (DeFi data aggregator)');
 
-      console.log(chalk.blue(`\nRecommendations:`));
-      console.log(chalk.green('  All platforms are configured and ready to use!'));
-      console.log(chalk.yellow('  Run `defillama-data health` to check real-time status'));
-    } catch (error) {
-      handleError(error);
-    }
+    console.log(chalk.blue('\nRecommendations:'));
+    console.log(chalk.green('  All platforms are configured and ready to use!'));
+    console.log(chalk.yellow('  Run `defillama-data health` to check real-time status'));
   });
 
 // ============================================================================

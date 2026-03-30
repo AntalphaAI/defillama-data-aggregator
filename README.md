@@ -397,10 +397,10 @@ defillama-data defillama yields --limit 100 -f csv > yields.csv
 
 ## 🧪 Testing
 
-Run the deployment test script to verify all functionality:
+Run the test script to verify functionality:
 
 ```bash
-bash deployment_test.sh
+node scripts/test.js
 ```
 
 This will test:
@@ -420,7 +420,6 @@ This will test:
 |----------|-------------|
 | README.md | User manual (this file) |
 | SKILL.md | Skill technical documentation |
-| QUICK_START.md | Quick reference card |
 
 ---
 

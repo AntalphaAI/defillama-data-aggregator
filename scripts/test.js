@@ -11,34 +11,47 @@ let config;
 try {
   config = require(path.join(__dirname, '../config/keys.js'));
 } catch (error) {
-  console.error('❌ config/keys.js not found. Copy config/keys.example.js to config/keys.js');
-  process.exit(1);
+  console.error('⚠️  config/keys.js not found. Using example config.');
+  try {
+    config = require(path.join(__dirname, '../config/keys.example.js'));
+  } catch (fallbackError) {
+    console.error('❌ No configuration files found!');
+    process.exit(1);
+  }
 }
 
 console.log('✓ Configuration loaded');
 
-// Import clients
+// Import DefiLlama client (the only platform currently implemented)
 const DefiLlamaClient = require('../src/platforms/defillama');
-const CoinMarketCapClient = require('../src/platforms/coinmarketcap');
-const CoinglassClient = require('../src/platforms/coinglass');
-const NansenClient = require('../src/platforms/nansen');
-const DuneClient = require('../src/platforms/dune');
 
-console.log('✓ All clients imported');
+console.log('✓ DefiLlama client imported');
 
 // Test initialization
 const defillama = new DefiLlamaClient(config);
-const cmc = new CoinMarketCapClient(config);
-const coinglass = new CoinglassClient(config);
-const nansen = new NansenClient(config);
-const dune = new DuneClient(config);
 
-console.log('✓ All clients initialized');
+console.log('✓ DefiLlama client initialized');
 console.log('');
-console.log('✅ Installation verified successfully!');
-console.log('');
-console.log('You can now use the crypto-data CLI:');
-console.log('  crypto-data --help');
-console.log('  crypto-data defillama tvl');
-console.log('  crypto-data cmc price --symbols BTC,ETH');
-console.log('');
+
+// Quick health check
+async function runTests() {
+  try {
+    console.log('Testing DefiLlama API connection...');
+    const tvl = await defillama.getTotalTvl();
+    console.log(`✓ TVL fetched: $${(tvl.totalTvl / 1e9).toFixed(2)}B`);
+    
+    console.log('');
+    console.log('✅ Installation verified successfully!');
+    console.log('');
+    console.log('You can now use the defillama-data CLI:');
+    console.log('  node src/index.js --help');
+    console.log('  node src/index.js defillama tvl');
+    console.log('  node src/index.js defillama protocols --limit 10');
+    console.log('');
+  } catch (error) {
+    console.error('❌ Test failed:', error.message);
+    process.exit(1);
+  }
+}
+
+runTests();

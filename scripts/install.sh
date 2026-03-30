@@ -1,10 +1,10 @@
 #!/bin/bash
 
-# Crypto Data Aggregator Installation Script
+# DefiLlama Data Aggregator Installation Script
 
 set -e
 
-echo "🚀 Installing Crypto Data Aggregator..."
+echo "🚀 Installing DefiLlama Data Aggregator..."
 echo ""
 
 # Check if Node.js is installed
@@ -38,8 +38,6 @@ if [ ! -f "config/keys.js" ]; then
     cp config/keys.example.js config/keys.js
     echo "✓ Config file created: config/keys.js"
     echo ""
-    echo "⚠️  Please edit config/keys.js to add your API keys."
-    echo ""
 else
     echo "✓ Config file already exists: config/keys.js"
     echo ""
@@ -48,19 +46,20 @@ fi
 # Link CLI command
 echo "🔗 Linking CLI command..."
 npm link
-echo "✓ CLI command linked: crypto-data"
+echo "✓ CLI command linked: defillama-data"
 echo ""
 
 # Test installation
 echo "🧪 Testing installation..."
-if command -v crypto-data &> /dev/null; then
+if command -v defillama-data &> /dev/null; then
     echo "✓ Installation successful!"
     echo ""
     echo "📝 Usage:"
-    echo "  crypto-data --help"
-    echo "  crypto-data cmc price --symbols BTC,ETH"
-    echo "  crypto-data defillama tvl"
-    echo "  crypto-data coinglass funding --symbol BTCUSDT"
+    echo "  defillama-data --help"
+    echo "  defillama-data defillama tvl"
+    echo "  defillama-data defillama protocols --limit 10 --format table"
+    echo "  defillama-data defillama yields --min-apy 10 --limit 20"
+    echo "  defillama-data health"
     echo ""
 else
     echo "❌ Installation failed. CLI command not available."
