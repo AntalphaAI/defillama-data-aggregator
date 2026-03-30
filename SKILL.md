@@ -1,8 +1,9 @@
 ---
 name: defillama-data-aggregator
 description: Professional DeFi data aggregator that provides unified access to TVL, protocols, chains, and yields data from DefiLlama. Supports multiple output formats (JSON/Table/CSV), health monitoring, and security validation.
-homepage: https://github.com/elvali-collab/defillama-data-aggregator
+homepage: https://github.com/AntalphaAI/defillama-data-aggregator
 version: 1.0.3
+author: AntalphaAI
 emoji: "📊"
 tags: defi,web3,crypto,tvl,data,blockchain,yields,defillama
 metadata:
@@ -130,6 +131,16 @@ node {skillDir}/src/index.js defillama protocols --limit 50 --format csv
 - **Range Validation** - Numeric inputs validated against bounds
 - **Pattern Validation** - Protocol/chain names follow strict rules
 
+## Security Notes
+
+- **No API Keys Required**: This skill uses DefiLlama's public API which does not require authentication
+- **External Requests**: Data is fetched from:
+  - `https://api.llama.fi` (DefiLlama API)
+  - `https://yields.llama.fi` (DefiLlama Yields API)
+- **No Local Server**: This skill does not start any local HTTP server
+- **No File Persistence**: No data is persisted locally (caching is in-memory only)
+- **Input Validation**: All user inputs are sanitized to prevent injection attacks
+
 ## Installation
 
 ### Prerequisites
@@ -183,12 +194,6 @@ node {skillDir}/src/index.js defillama yields --min-apy 20 --min-tvl 1000000 --l
 node {skillDir}/src/index.js health
 ```
 
-## Notes
-
-- `{skillDir}` refers to the directory containing this SKILL.md file
-- All API calls are rate-limited to prevent abuse
-- No API keys required for basic DefiLlama data
-
 ## Troubleshooting
 
 ### Protocol Not Found
@@ -210,5 +215,6 @@ node {skillDir}/src/index.js health
 ---
 
 **Version**: 1.0.3  
-**Last Updated**: 2026-03-30  
-**Author**: OpenClaw Community
+**Last Updated**: 2026-03-31  
+**Maintainer**: AntalphaAI  
+**License**: MIT

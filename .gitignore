@@ -3,6 +3,7 @@ node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+package-lock.json
 
 # Configuration files with sensitive data
 config/keys.js
@@ -33,10 +34,16 @@ logs/
 dist/
 build/
 
-# Documentation reports (optional - uncomment if you want to exclude them)
-# *_REPORT.md
-# *_SUMMARY.md
-# *_CHECKLIST.md
+# Cache
+.cache/
+.alerts.json
+
+# Skill internal
+.skill/
+
+# Test scripts (keep for development but exclude from release)
+# deep_review_test.sh
+# deployment_test.sh
 
 # Backup files
 *.backup
